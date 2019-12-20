@@ -3,7 +3,7 @@ local targetPlatform = cc.Application:getInstance():getTargetPlatform()
 
 local openinstall = class("openinstall")
 
-local activityClassName = "org/cocos2dx/lua/AppActivity"
+local activityClassName = "org/cocos2dx/lua/ChessActivity"
 local openinstallClassName = "com/fm/openinstall/OpenInstall"
 
 function openinstall:getInstall(s, callback)
