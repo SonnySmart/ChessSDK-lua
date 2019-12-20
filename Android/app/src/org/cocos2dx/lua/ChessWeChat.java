@@ -1,8 +1,12 @@
 package org.cocos2dx.lua;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
@@ -15,12 +19,19 @@ import java.util.List;
 
 public class ChessWeChat {
 
+    public static String TAG = ChessWeChat.class.getSimpleName();
+
     public static int INVALID_LUAFUNC = -1;
 
-    private static IWXAPI api = null; // 相应的包，请集成SDK后自行引入
+    private static IWXAPI api; // 相应的包，请集成SDK后自行引入
+
+    private static Context mContent;
 
     private static int mLuaFunc = INVALID_LUAFUNC;
 
+    /**
+     * 登录结果返回
+     * */
     public static class LoginResult {
         public static int LOGIN_OK = 0;
         public static int LOGIN_CANCEL = 1;
@@ -48,12 +59,29 @@ public class ChessWeChat {
     }
 
     public static IWXAPI getApi(Context context) {
-        if (api == null)
-            api = WXAPIFactory.createWXAPI(context, ChessConfig.WECHAT_APPID);
+        mContent = context;
+        if (api == null && mContent != null) {
+            api = WXAPIFactory.createWXAPI(mContent, ChessConfig.WECHAT_APPID);
+
+            getMetaData(mContent);
+        }
         return api;
     }
 
-    public static void callLuaFunc(LoginResult result) {
+    private static void getMetaData(Context context) {
+        ApplicationInfo ai = null;
+        try {
+            ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+        Bundle bundle = ai.metaData;
+        ChessConfig.WECHAT_APPID = bundle.getString("WECHAT_APPID");
+        ChessConfig.WECHAT_APPSECRET = bundle.getString("WECHAT_APPSECRET");
+    }
+
+    private static void callLuaFunc(LoginResult result) {
         if (result != null && mLuaFunc > INVALID_LUAFUNC) {
             Cocos2dxLuaJavaBridge.callLuaFunctionWithString(mLuaFunc, result.serialize());
         }

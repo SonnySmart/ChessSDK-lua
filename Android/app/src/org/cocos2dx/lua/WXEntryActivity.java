@@ -80,6 +80,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     result.setCode(ChessWeChat.LoginResult.LOGIN_FAILED);
                     result.setMessage("授权登录失败");
                     ChessWeChat.callLuaFunc(result);
+
+                    finish();
                 }
             }
                 break;
@@ -91,6 +93,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     result.setCode(ChessWeChat.LoginResult.LOGIN_CANCEL);
                     result.setMessage("授权登录取消");
                     ChessWeChat.callLuaFunc(result);
+
+                    finish();
                 }
             }
                 break;

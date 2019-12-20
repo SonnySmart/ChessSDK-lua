@@ -43,7 +43,7 @@ public class ChessActivity extends Cocos2dxActivity {
         OpenInstall.init(this);
         OpenInstallHelper.getWakeup(getIntent(), mContext);
 
-        ChessWeChat.getApi(mContext);
+        ChessWeChat.getApi(this);
     }
 
     @Override
