@@ -1,12 +1,10 @@
 package org.cocos2dx.lua;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
@@ -58,16 +56,6 @@ public class ChessWeChat {
         }
     }
 
-    public static IWXAPI getApi(Context context) {
-        mContent = context;
-        if (api == null && mContent != null) {
-            api = WXAPIFactory.createWXAPI(mContent, ChessConfig.WECHAT_APPID);
-
-            getMetaData(mContent);
-        }
-        return api;
-    }
-
     private static void getMetaData(Context context) {
         ApplicationInfo ai = null;
         try {
@@ -85,6 +73,20 @@ public class ChessWeChat {
         if (result != null && mLuaFunc > INVALID_LUAFUNC) {
             Cocos2dxLuaJavaBridge.callLuaFunctionWithString(mLuaFunc, result.serialize());
         }
+    }
+
+    /**
+     * 初始化获取api metadata
+     * @param context 上下文
+     * */
+    public static IWXAPI getApi(Context context) {
+        mContent = context;
+        if (api == null && mContent != null) {
+            api = WXAPIFactory.createWXAPI(mContent, ChessConfig.WECHAT_APPID);
+
+            getMetaData(mContent);
+        }
+        return api;
     }
 
     /**
